@@ -94,7 +94,6 @@ void main()
                     current = current->link;
                 }
                 current->link = NULL;
-                free(temp);
             }
             break;
 
