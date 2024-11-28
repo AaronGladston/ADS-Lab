@@ -27,12 +27,15 @@ void main()
             if (head == NULL)
             {
                 head = newnode;
-                current = newnode;
             }
             else
             {
+                current = head;
+                while (current->link != NULL)
+                {
+                    current = current->link;
+                }
                 current->link = newnode;
-                current = newnode;
             }
             break;
 
@@ -48,14 +51,23 @@ void main()
             scanf("%d", &newnode->data);
             newnode->link = NULL;
             current = head;
-            for (i = 1; i < pos - 1; i++)
+            if (pos == 1)
             {
-                current = current->link;
+                newnode->link = head;
+                head = newnode;
             }
-            if (i == pos - 1)
+            else
             {
-                newnode->link = current->link;
-                current->link = newnode;
+                current = head;
+                for (i = 1; i < pos - 1; i++)
+                {
+                    current = current->link;
+                }
+                if (i == pos - 1)
+                {
+                    newnode->link = current->link;
+                    current->link = newnode;
+                }
             }
             break;
 
@@ -86,6 +98,11 @@ void main()
             {
                 printf("The linked list is empty.\n");
             }
+            else if (head->link == NULL)
+            {
+                free(head);
+                head = NULL;
+            }
             else
             {
                 current = head;
@@ -93,27 +110,41 @@ void main()
                 {
                     current = current->link;
                 }
+                free(current->link);
                 current->link = NULL;
             }
             break;
 
         case 6:
+            printf("Enter the position from where the element is to be deleted:\n");
+            scanf("%d", &posd);
             if (head == NULL)
             {
                 printf("The linked list is empty.\n");
             }
+            else if (posd == 1)
+            {
+                temp = head;
+                head = head->link;
+                free(temp);
+            }
             else
             {
-                printf("Enter the position from where the element is to be deleted:\n");
-                scanf("%d", &posd);
                 current = head;
-                for (j = 1; j < posd - 1; j++)
+                for (i = 1; i < posd - 1 && current != NULL; i++)
                 {
                     current = current->link;
                 }
-                temp = current->link;
-                current->link = temp->link;
-                free(temp);
+                if (current == NULL || current->link == NULL)
+                {
+                    printf("Invalid position.\n");
+                }
+                else
+                {
+                    temp = current->link;
+                    current->link = temp->link;
+                    free(temp);
+                }
             }
             break;
 
@@ -124,15 +155,15 @@ void main()
             }
             else
             {
-                current = head;
-                temp = current->link->link;
-                current->link->link = temp->link;
+                temp = head;
+                head = head->link;
                 free(temp);
             }
             break;
 
         case 8:
-            exit(1);
+            printf("Exiting the program.\n");
+            exit(0);
 
         default:
             printf("Invalid choice.\n");
