@@ -7,7 +7,7 @@ struct node
 } *head = NULL, *newnode, *current, *temp;
 void main()
 {
-    printf("Linked list opertions are:\n1.Insertion at the end\n2.Insertion at any point\n3.Insertion at beginnning\n4.Traversal and Display\n5.Deletion from end\n6.Deletion from any point\n7.Deletion from beginning\n8.Exit\n");
+    printf("Linked list opertions are:\n1.Insertion at the end\n2.Insertion at any point\n3.Insertion at beginning\n4.Traversal and Display\n5.Deletion from end\n6.Deletion from any point\n7.Deletion from beginning\n8.Exit\n");
     while (1)
     {
         int n, pos, i, j, posd;
