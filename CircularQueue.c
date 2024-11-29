@@ -2,7 +2,7 @@
 #include <stdlib.h>
 void main()
 {
-    int a[100], front = -1, rear = -1, i, x, y;
+    int front = -1, rear = -1, i, x, y;
     printf("Enter the size of the queue:");
     scanf("%d", &x);
     int b[x];
@@ -38,7 +38,15 @@ void main()
             else
             {
                 printf("The element that has been deleted from the circular queue is:%d\n", b[front]);
+                if(front==rear)
+                {
+                    front=-1;
+                    rear=-1;
+                }
+                else
+                {
                 front = (front + 1) % x;
+                }
             }
             break;
 
@@ -49,25 +57,16 @@ void main()
             }
             else
             {
-                if (rear > front)
+                printf("The circular queue is:\n");
+                i=front;
+                while (1)
                 {
-                    printf("The elements in the circular queue are:\n");
-                    for (i = front; i <= rear; i++)
+                    printf("%d\n", b[i]);
+                    if(i==rear)
                     {
-                        printf("%d\n", b[i]);
+                        break;
                     }
-                }
-                if(front > rear)
-                {
-                    printf("The elements in the circular queue are:\n");
-                    for (i = front; i < x; i++)
-                    {
-                        printf("%d\n", b[i]);
-                    }
-                    for (i = 0; i <= rear; i++)
-                    {
-                        printf("%d\n", b[i]);
-                    }
+                    i = (i + 1) % x;
                 }
             }
             break;
