@@ -1,201 +1,229 @@
 #include <stdio.h>
 #include <stdlib.h>
-struct node
+
+typedef struct Node
 {
     int data;
-    struct node *next;
-    struct node *prev;
-} *head = NULL, *current, *newnode, *temp, *del;
+    struct Node *next;
+    struct Node *prev;
+} Node;
 
-void insertEnd()
+Node *head = NULL, *tail = NULL, *newNode, *temp;
+
+void create()
 {
-    newnode = malloc(sizeof(struct node));
-    printf("enter the element :\n");
-    scanf("%d", &(newnode->data));
-    newnode->next = NULL;
-    newnode->prev = NULL;
-    if (head == NULL)
+    int n;
+    printf("Enter Number of Nodes: ");
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++)
     {
-        head = newnode;
-        current = newnode;
-    }
-    else
-    {
-        current = head;
-        while(current->next!=NULL)
+        printf("Enter Data: ");
+        newNode = (Node *)malloc(sizeof(Node));
+        if (newNode == NULL)
         {
-            current = current->next;
+            printf("Memory allocation failed!\n");
+            return;
         }
-        current->next = newnode;
-        newnode->prev = current;
-        current = newnode;
+        scanf("%d", &newNode->data);
+        newNode->next = NULL;
+        newNode->prev = NULL;
+        if (head == NULL)
+        {
+            head = newNode;
+            tail = newNode;
+        }
+        else
+        {
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
+        }
     }
-}
-
-void insertBeg()
-{
-    newnode = malloc(sizeof(struct node));
-    printf("enter the element :\n");
-    scanf("%d", &(newnode->data));
-    newnode->next = NULL;
-    newnode->prev = NULL;
-    if (head == NULL)
-    {
-        head = newnode;
-        current = newnode;
-    }
-    else
-    {
-        head->prev = newnode;
-        newnode->next = head;
-        head = newnode;
-    }
-}
-void insertAny()
-{
-    int pos, i;
-    newnode = malloc(sizeof(struct node));
-    printf("Enter the element :\n");
-    scanf("%d", &newnode->data);
-    newnode->next = NULL;
-    newnode->prev = NULL;
-    printf("Enter the position :\n");
-    scanf("%d", &pos);
-    current = head;
-    for (i = 1; i < pos - 1; i++)
-    {
-        current = current->next;
-    }
-    temp = current->next;
-    current->next = newnode->next;
-    newnode->prev = temp->prev;
-    temp->prev = newnode;
-    current->next = newnode;
 }
 
 void display()
 {
-    temp = head;
-    if(temp==NULL)
+    int choice;
+    printf("Display From\n1. Start\n2. End\nChoose: ");
+    scanf("%d", &choice);
+    if (choice == 1)
     {
-        printf("The linked list is empty.");
-    }
-    else{
-        while (temp != NULL)
+        for (temp = head; temp != NULL; temp = temp->next)
         {
-            printf("%d<-->", temp->data);
-            temp = temp->next;
+            printf("%d\t", temp->data);
         }
     }
-}
-
-void delete_End()
-{
-    current=head;
-    if (head == NULL)
+    else if (choice == 2)
     {
-        printf("The linked list is empty.\n");
-    }
-    else if(head->next == NULL)
-    {
-        head = NULL; 
+        for (temp = tail; temp != NULL; temp = temp->prev)
+        {
+            printf("%d\t", temp->data);
+        }
     }
     else
-    { 
-        while(current->next->next != NULL)
+    {
+        printf("Invalid choice!\n");
+    }
+    printf("\n");
+}
+
+void insert()
+{
+    int choice, position;
+    printf("Data to be inserted\n1. At the Top\n2. At the Bottom\n3. In Between\nChoose(1/2/3): ");
+    scanf("%d", &choice);
+    newNode = (Node *)malloc(sizeof(Node));
+    if (newNode == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+    printf("Enter The Data: ");
+    scanf("%d", &newNode->data);
+    newNode->next = NULL;
+    newNode->prev = NULL;
+
+    if (choice == 1)
+    {
+        newNode->next = head;
+        if (head != NULL)
+            head->prev = newNode;
+        head = newNode;
+        if (tail == NULL)
+            tail = newNode;
+    }
+    else if (choice == 2)
+    {
+        if (tail != NULL)
         {
-            current = current->next;
+            tail->next = newNode;
+            newNode->prev = tail;
+            tail = newNode;
         }
-        current->next=NULL;
-        
+        else
+        {
+            head = newNode;
+            tail = newNode;
+        }
     }
-    
+    else
+    {
+        printf("Enter the position: ");
+        scanf("%d", &position);
+        if (position < 1)
+        {
+            printf("Invalid position!\n");
+            return;
+        }
+        temp = head;
+        for (int i = 1; temp != NULL && i < position; i++)
+        {
+            temp = temp->next;
+        }
+        if (temp == NULL)
+        {
+            printf("Position out of range!\n");
+            return;
+        }
+        newNode->next = temp->next;
+        if (temp->next != NULL)
+            temp->next->prev = newNode;
+        temp->next = newNode;
+        newNode->prev = temp;
+    }
 }
 
-void delete_Beg()
+void delete()
 {
-    if (head == NULL)
+    int choice, position;
+    printf("Data to be Deleted\n1. From the Top\n2. From the Bottom\n3. In Between\nChoose(1/2/3): ");
+    scanf("%d", &choice);
+
+    if (choice == 1)
     {
-        printf("The linked list is empty.\n");
+        if (head == NULL)
+        {
+            printf("List is empty!\n");
+            return;
+        }
+        temp = head;
+        head = head->next;
+        if (head != NULL)
+            head->prev = NULL;
+        if (head == NULL)
+            tail = NULL;
     }
-    current = head;
-    temp = current->next;
-    del = temp->next;
-    current->next = temp->next;
-    del->prev = current;
-    temp->next = NULL;
-    temp->prev = NULL;
-    free(temp);
+    else if (choice == 2)
+    {
+        if (tail == NULL)
+        {
+            printf("List is empty!\n");
+            return;
+        }
+        temp = tail;
+        tail = tail->prev;
+        if (tail != NULL)
+            tail->next = NULL;
+        if (tail == NULL) //
+            head = NULL;
+    }
+    else
+    {
+        printf("Enter the position: ");
+        scanf("%d", &position);
+        if (position < 1 || head == NULL)
+        {
+            printf("Invalid position or empty list!\n");
+            return;
+        }
+        temp = head;
+        for (int i = 1; temp != NULL && i < position; i++)
+        {
+            temp = temp->next;
+        }
+        if (temp == NULL)
+        {
+            printf("Position out of range!\n");
+            return;
+        }
+        if (temp->prev != NULL)
+            temp->prev->next = temp->next;
+        if (temp->next != NULL)
+            temp->next->prev = temp->prev;
+        if (temp == head)
+            head = temp->next;
+        if (temp == tail)
+            tail = temp->prev;
+        free(temp);
+    }
 }
 
-void delete_Any()
+void main()
 {
-    int posd, i;
-    if (head == NULL)
+    int choice;
+    while (1)
     {
-        printf("The linked list is empty.\n");
-    }
-    printf("Enter the position:\n");
-    scanf("%d", &posd);
-    current = head;
-    for (i = 1; i < posd - 1; i++)
-    {
-        current = current->next;
-    }
-    temp = current->next;
-    del = temp->next;
-    del->prev = temp->prev;
-    current->next = temp->next;
-    temp->next = NULL;
-    temp->prev = NULL;
-    free(temp);
-}
-
-int main()
-{
-    int c;
-    do
-    {
-        printf("\n1.Insertion at end\n2.Insertion at beginning\n3.Insertion at any point\n4.Display\n5.Deletion at end\n6.Deletion at beginning\n7.Deletion at any point\n8.Exit\nEnter the operation : ");
-        scanf("%d", &c);
-        switch (c)
+        printf("\n1. Create a LL\n2. Display the LL\n3. Insert Elements into the LL\n4. Delete\n5. End\nChoose: ");
+        scanf("%d", &choice);
+        switch (choice)
         {
         case 1:
-            insertEnd();
+            create();
             break;
-
         case 2:
-            insertBeg();
-            break;
-
-        case 3:
-            insertAny();
-            break;
-
-        case 4:
             display();
             break;
-
+        case 3:
+            insert();
+            break;
+        case 4:
+            delete ();
+            break;
         case 5:
-            delete_End();
-            break;
-
-        case 6:
-            delete_Beg();
-            break;
-
-        case 7:
-            delete_Any();
-            break;
-
-        case 8:
-            printf("Exiting the program.\n");
             exit(0);
-            break;
-
         default:
-            printf("invalid input");
+            printf("Wrong choice.\n");
             break;
         }
-    } while (1);
+    }
 }
